@@ -2054,9 +2054,7 @@ for (let i = 1; i < measurements.length; i++) {
   }
 }
 
-console.log(increases)
-
-
+console.log(increases);
 
 // --- Part Two ---
 // Considering every single measurement isn't as useful as you expected: there's just too much noise in the data.
@@ -2092,15 +2090,14 @@ console.log(increases)
 // Consider sums of a three-measurement sliding window. How many sums are larger than the previous sum?
 
 increases = 0;
-for(i = 1; i < measurements.length; i++) {
+for (i = 1; i < measurements.length; i++) {
   let prev = measurements[i - 1];
   let cur = measurements[i];
   let next = measurements[i + 1];
   let sum = prev + cur + next;
   let prevSum = measurements[i - 2] + prev + cur;
-  if(sum > prevsum) {
+
+  if (sum > prevSum) {
     increases++;
   }
 }
-
-console.log(increases)

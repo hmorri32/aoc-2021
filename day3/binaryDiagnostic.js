@@ -1058,12 +1058,12 @@ for (let hit of hits) {
   } else if (hit.ones < hit.zeroes) {
     gammaRate += '0';
     epsilonRate += '1';
-  }
+  } else throw Error('errrrrrr');
 }
 // parse binary
-gammaRate = parseInt(gammaRate, 2);
-epsilonRate = parseInt(epsilonRate, 2);
-result = gammaRate * epsilonRate;
+// gammaRate = parseInt(gammaRate, 2);
+// epsilonRate = parseInt(epsilonRate, 2);
+// result = gammaRate * epsilonRate;
 // console.log(gammaRate, epsilonRate, result);
 
 // --- Part Two ---
@@ -1096,5 +1096,61 @@ result = gammaRate * epsilonRate;
 
 // Use the binary numbers in your diagnostic report to calculate the oxygen generator rating and CO2 scrubber rating, then multiply them together. What is the life support rating of the submarine? (Be sure to represent your answer in decimal, not binary.)
 
-let oxygenRating;
-let c02Rating;
+function calculateGammaAndEpsilon(arr) {
+  let hits = [];
+
+  function recordHits(pos, res) {
+    if (!hits[pos]) {
+      hits[pos] = { zeroes: 0, ones: 0 };
+    }
+    let hit = hits[pos];
+    if (res === '0') {
+      hit.zeroes++;
+    } else if (res === '1') {
+      hit.ones++;
+    } else throw Error('omg');
+  }
+
+  for (let num of arr) {
+    for (let i = 0; i < num.length; i++) {
+      recordHits(i, num[i]);
+    }
+  }
+
+  let gammaRate = '';
+  let epsilonRate = '';
+
+  for (let hit of hits) {
+    if (hit.ones > hit.zeroes) {
+      gammaRate += '1';
+      epsilonRate += '0';
+    } else if (hit.ones < hit.zeroes) {
+      gammaRate += '0';
+      epsilonRate += '1';
+    } else {
+      gammaRate += '1';
+      epsilonRate += '0';
+    }
+  }
+
+  return [gammaRate, epsilonRate];
+}
+
+function findRating(arr, kind, pos = 0) {
+  let [gammaRate, epsilonRate] = calculateGammaAndEpsilon(arr);
+  let expectedValue = kind === 'o' ? gammaRate[pos] : epsilonRate[pos];
+  let filtered = arr.filter((num) => num[pos] === expectedValue);
+
+  if (filtered.length === 1) {
+    return filtered[0];
+  } else if (filtered.length === 0) {
+    throw Error('nope');
+  } else {
+    return findRating(filtered, kind, pos + 1);
+  }
+}
+
+let oxygenRating = findRating(nums, 'o');
+let c02Rating = findRating(nums, 'c');
+let result = parseInt(oxygenRating, 2) * parseInt(c02Rating, 2);
+console.log(oxygenRating, c02Rating, result);

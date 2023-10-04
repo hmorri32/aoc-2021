@@ -1079,9 +1079,8 @@ horizontal = 0;
 depth = 0;
 
 inputArray.forEach((command) => {
-  let commandArray = command.split(' ');
-  let direction = commandArray[0];
-  let distance = parseInt(commandArray[1]);
+  let [direction, distance] = command.split(' ');
+  distance = Number(distance);
   if (direction === 'forward') {
     horizontal += distance;
     depth += aim * distance;
